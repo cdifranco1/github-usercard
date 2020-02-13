@@ -3,18 +3,20 @@
            https://api.github.com/users/<your name>
 */
 
-const followersArray = ['tetondan',
-  'dustinmyers',
-  'justsml',
-  'luishrd',
-  'bigknell'];
 
-followersArray.forEach((follower) => {
-  axios.get(`https://api.github.com/users/${follower}`)
-    .then((res) => {
-      document.querySelector('body').append(CreateCard(res.data))
+const mainUser = 'cdifranco1/'
+
+const baseUrl = 'https://api.github.com/users/'
+const followers = 'followers'
+
+axios.get(`${baseUrl}${mainUser}${followers}`).
+  then((res) => res.data.forEach((follower) => {
+    axios.get(`${baseUrl}${follower.login}`).
+    then((user) => {
+      document.querySelector('body').append(CreateCard(user.data))
     })
-  });
+  }))
+ 
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
