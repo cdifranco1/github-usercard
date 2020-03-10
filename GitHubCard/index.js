@@ -3,6 +3,21 @@
            https://api.github.com/users/<your name>
 */
 
+
+const mainUser = 'cdifranco1/'
+
+const baseUrl = 'https://api.github.com/users/'
+const followers = 'followers'
+
+axios.get(`${baseUrl}${mainUser}${followers}`).
+  then((res) => res.data.forEach((follower) => {
+    axios.get(`${baseUrl}${follower.login}`).
+    then((user) => {
+      document.querySelector('body').append(CreateCard(user.data))
+    })
+  }))
+ 
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -24,7 +39,7 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -43,8 +58,51 @@ const followersArray = [];
     <p>Bio: {users bio}</p>
   </div>
 </div>
-
 */
+
+function CreateCard(obj){
+  const card = document.createElement('div'),
+        image = document.createElement('img'),
+        cardInfo = document.createElement('div'),
+        name = document.createElement('h3'),
+        username = document.createElement('p'),
+        location = document.createElement('p'),
+        profile = document.createElement('p'),
+        address = document.createElement('a'),
+        followers = document.createElement('p'),
+        following = document.createElement('p'),
+        bio = document.createElement('p');
+
+  card.classList.add("card");
+  cardInfo.classList.add("card-info");
+  name.classList.add("name");
+  username.classList.add("username");
+
+  image.src = obj.avatar_url;
+
+  name.textContent = obj.name;
+  username.textContent = obj.login;
+  location.textContent = `Location: ${obj.location}`;
+  profile.textContent = 'Profile: '
+  address.href = obj.html_url;
+  address.textContent = `${obj.html_url}`
+  followers.textContent = `Followers: ${obj.followers}`;
+  following.textContent = `Following: ${obj.following}`;
+  bio.textContent = `Bio: ${obj.bio}`;
+
+  profile.appendChild(address)
+  cardInfo.append(name,  username, location, profile, followers, following, bio)
+  card.append(image, cardInfo)
+
+  return card
+};
+
+
+
+
+
+
+
 
 /* List of LS Instructors Github username's: 
   tetondan
